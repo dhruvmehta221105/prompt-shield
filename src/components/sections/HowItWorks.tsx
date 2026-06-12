@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
-import { SectionBackground } from "@/components/ui/section-background";
+
 import { SectionHeader } from "@/components/ui/section-header";
 import { MISSION_CARDS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -12,8 +12,8 @@ export function HowItWorks() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section id="mission" className="relative overflow-hidden bg-bg-dark py-20 lg:py-24">
-      <SectionBackground />
+    <section id="mission" className="relative overflow-hidden py-20 lg:py-24">
+      
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-[98px]">
         <SectionHeader

@@ -3,16 +3,15 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { GradientButton } from "@/components/ui/gradient-button";
-import { SectionBackground } from "@/components/ui/section-background";
 import { ASSETS, SITE } from "@/lib/constants";
 
 export function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen overflow-hidden bg-bg-dark pt-28 lg:pt-32"
+      className="relative min-h-screen overflow-hidden pt-28 lg:pt-32"
     >
-      <SectionBackground />
+     
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 pb-20 lg:grid-cols-2 lg:gap-8 lg:px-[98px] lg:pb-32">
         <motion.div

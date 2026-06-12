@@ -8,7 +8,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="relative border-t border-white/5 bg-bg-dark py-16"
+      className="relative border-t border-white/5 py-16"
       aria-labelledby="contact-heading"
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-[98px]">

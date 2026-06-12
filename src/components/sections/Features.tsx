@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
-import { SectionBackground } from "@/components/ui/section-background";
 import { SectionHeader } from "@/components/ui/section-header";
 import { staggerContainer, fadeInUp } from "@/components/ui/motion";
 import { ASSETS, CORE_FEATURES, ENTERPRISE_FEATURES } from "@/lib/constants";
@@ -12,8 +11,8 @@ import { cn } from "@/lib/utils";
 export function Features() {
   return (
     <>
-      <section id="features" className="relative overflow-hidden bg-bg-dark py-20 lg:py-24">
-        <SectionBackground />
+      <section id="features" className="relative overflow-hidden py-20 lg:py-24">
+        
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-[98px]">
           <SectionHeader
@@ -67,7 +66,7 @@ export function Features() {
       </section>
 
       <section className="relative overflow-hidden bg-bg-dark py-20 lg:py-28">
-        <SectionBackground />
+        
 
         <div className="relative mx-auto max-w-7xl px-6 lg:px-[98px]">
           <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Logo } from "@/components/ui/logo";
-import { SectionBackground } from "@/components/ui/section-background";
 import {
   CONTACT_ITEMS,
   FOOTER_LINKS,
@@ -14,7 +13,7 @@ import {
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-bg-dark px-6 py-16 lg:px-[98px] lg:py-24">
-      <SectionBackground />
+      
 
       <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.2fr_1fr_1fr_1.4fr] lg:gap-10">
         <div className="flex flex-col gap-8">

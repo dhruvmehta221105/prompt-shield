@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
-import { SectionBackground } from "@/components/ui/section-background";
+
 import { SectionHeader } from "@/components/ui/section-header";
 import { staggerContainer, fadeInUp } from "@/components/ui/motion";
 import { ASSETS, TESTIMONIALS } from "@/lib/constants";
@@ -12,9 +12,9 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden bg-bg-dark py-20 lg:py-28"
+      className="relative overflow-hidden py-20 lg:py-28"
     >
-      <SectionBackground />
+      
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-[98px]">
         <SectionHeader

@@ -22,22 +22,26 @@ export const ASSETS = {
   aboutTyping: "/images/about-typing.jpg",
   aboutData: "/images/about-data.jpg",
   featuresDeveloper: "/images/features-developer.png",
-  iconInjection: "/images/icon-injection.png",
-  iconCyberSecurity: "/images/icon-cyber-security.png",
-  iconBackup: "/images/icon-backup.png",
-  iconCustomize: "/images/icon-customize.png",
-  icon24Hours: "/images/icon-24hours.png",
-  iconThreat: "/images/icon-threat.png",
-  iconTraining: "/images/icon-training.png",
-  checkIcon: "/images/check-icon.png",
-  stars: "/images/stars.png",
-  socialIg: "/images/social-ig.png",
-  socialFb: "/images/social-fb.png",
-  socialTw: "/images/social-tw.png",
-  socialYt: "/images/social-yt.png",
-  iconEmail: "/images/icon-email.png",
-  iconLocation: "/images/icon-location.png",
-  iconPhone: "/images/icon-phone.png",
+  
+  iconInjection: "/images/icon-injection.svg",
+  iconCyberSecurity: "/images/icon-cyber-security.svg",
+  iconBackup: "/images/icon-backup.svg",
+  iconCustomize: "/images/icon-customize.svg",
+  icon24Hours: "/images/icon-24hours.svg",
+  iconThreat: "/images/icon-threat.svg",
+  iconTraining: "/images/icon-training.svg",
+  
+  checkIcon: "/images/check-icon.svg",
+  stars: "/images/stars.svg",
+  
+  socialIg: "/images/social-ig.svg",
+  socialFb: "/images/social-fb.svg",
+  socialTw: "/images/social-tw.svg",
+  socialYt: "/images/social-yt.svg",
+  
+  iconEmail: "/images/icon-email.svg",
+  iconLocation: "/images/icon-location.svg",
+  iconPhone: "/images/icon-phone.svg",
 } as const;
 
 export const NAV_LINKS: NavLink[] = [
@@ -124,7 +128,7 @@ export const PRICING_PLANS: PricingPlan[] = [
     name: "BASIC",
     description:
       "Perfect for developers exploring AI security with essential protection features.",
-    price: "$0",
+    price: "₹0",
     period: "/per month",
     features: [
       "100 Requests Daily",
@@ -146,8 +150,7 @@ export const PRICING_PLANS: PricingPlan[] = [
       "Risk Dashboard",
       "24/7 Priority Support",
     ],
-    cta: "Get Pro",
-    featured: true,
+    cta: "Get Pro"
   },
   {
     id: "premium",

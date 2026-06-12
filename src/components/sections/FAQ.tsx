@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { SectionBackground } from "@/components/ui/section-background";
 import { SectionHeader } from "@/components/ui/section-header";
 
 const FAQ_ITEMS = [
@@ -24,8 +23,8 @@ const FAQ_ITEMS = [
 
 export function FAQ() {
   return (
-    <section id="faq" className="relative overflow-hidden bg-bg-dark py-20 lg:py-24">
-      <SectionBackground />
+    <section id="faq" className="relative overflow-hidden py-20 lg:py-24">
+
 
       <div className="relative mx-auto max-w-3xl px-6 lg:px-[98px]">
         <SectionHeader

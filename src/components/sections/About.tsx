@@ -3,15 +3,12 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { GradientButton } from "@/components/ui/gradient-button";
-import { SectionBackground } from "@/components/ui/section-background";
 import { SectionHeader } from "@/components/ui/section-header";
 import { ASSETS } from "@/lib/constants";
 
 export function About() {
   return (
-    <section id="about" className="relative overflow-hidden bg-bg-dark py-20 lg:py-24">
-      <SectionBackground />
-
+    <section id="about" className="relative overflow-hidden  py-20 lg:py-24">
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2 lg:gap-16 lg:px-[98px]">
         <motion.div
           initial={{ opacity: 0, x: -32 }}
