@@ -27,8 +27,7 @@ export function GlassCard({
           : undefined
       }
       className={cn(
-        "rounded-2xl border border-white/5 bg-card-gradient p-8 backdrop-blur-[25px]",
-        highlighted && "border-2 border-accent",
+        " rounded-3xl border border-white/10 transition-all duration-300 hover:border-white/60 pb-8",
         className
       )}
     >
