@@ -32,13 +32,15 @@ export function Features() {
             {CORE_FEATURES.map((feature) => (
               <motion.div key={feature.title} variants={fadeInUp} className="relative pt-10">
                 <div
-                  className={cn(
-                    "absolute left-1/2 top-0 z-10 flex size-20 -translate-x-1/2 items-center justify-center rounded-full border border-accent",
-                    feature.highlighted
-                      ? "bg-gradient-to-br from-[#0a767b] to-[#00a7d6]"
-                      : "bg-bg-dark"
-                  )}
-                >
+  className="
+    absolute left-1/2 top-0 z-10 flex size-20
+    -translate-x-1/2 items-center justify-center
+    rounded-full border border-white/20
+    bg-bg-dark
+    transition-all duration-300
+    group-hover:border-white
+  "
+>
                   <Image
                     src={feature.icon}
                     alt=""
@@ -49,8 +51,8 @@ export function Features() {
                   />
                 </div>
                 <GlassCard
-                  highlighted={feature.highlighted}
-                  className="pt-14 text-center"
+                  highlighted={false}
+                  className=" group pt-14 text-center"
                 >
                   <h3 className="mb-4 font-heading text-2xl font-semibold leading-8 text-white">
                     {feature.title}
@@ -103,7 +105,11 @@ export function Features() {
                 className="grid gap-6 sm:grid-cols-2"
               >
                 {ENTERPRISE_FEATURES.map((feature) => (
-                  <motion.div key={feature.title} variants={fadeInUp}>
+                <motion.div
+                key={feature.title}
+                variants={fadeInUp}
+                className="group relative pt-10"
+              >
                     <GlassCard className="h-full !p-6">
                       <Image
                         src={feature.icon}

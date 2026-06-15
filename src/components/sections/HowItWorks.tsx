@@ -26,7 +26,7 @@ export function HowItWorks() {
         <div className="hidden gap-6 lg:grid lg:grid-cols-3">
           {MISSION_CARDS.map((card) => (
             <GlassCard key={card.title} highlighted={card.highlighted}>
-              <h3 className="mb-4 font-heading text-2xl font-semibold leading-8 text-white">
+              <h3 className=" pt-5 pl-5 mb-4 font-heading text-2xl font-semibold leading-8 text-white">
                 {card.title}
               </h3>
               {card.items ? (
