@@ -44,11 +44,15 @@ export const ASSETS = {
   iconPhone: "/images/icon-phone.svg",
 } as const;
 
-export const NAV_LINKS: NavLink[] = [
+export const NAV_LINKS = [
   { label: "Home", href: "#home" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Features", href: "#features" },
+  { label: "How It Works", href: "#how-it-works" },
+
+  { label: "Scanner", href: "/scanner" },
+  { label: "Dashboard", href: "/dashboard" },
+
   { label: "Pricing", href: "#pricing" },
-  { label: "Contact Us", href: "#contact" },
 ];
 
 export const CORE_FEATURES: FeatureItem[] = [
