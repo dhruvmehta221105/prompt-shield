@@ -7,6 +7,7 @@ import { calculateRisk } from "@/lib/riskCalculator";
 import SeverityBadge from "@/components/scanner/SeverityBadge";
 import ThreatBadge from "@/components/scanner/ThreatBadge";
 import type { ScanResult } from "@/types/scan";
+import AppNavbar from "@/components/dashboard/AppNavbar";
 
 export default function ScannerPage() {
   const [prompt, setPrompt] = useState("");
@@ -70,7 +71,9 @@ export default function ScannerPage() {
   };
 
   return (
-    <main className="container mx-auto py-24">
+    <>
+    <AppNavbar />
+    <main className="container mx-auto pt-32 pb-24">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-4">
           Prompt Scanner
@@ -208,5 +211,6 @@ export default function ScannerPage() {
         </GlassCard>
       </div>
     </main>
+    </>
   );
 }

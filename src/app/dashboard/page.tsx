@@ -10,6 +10,7 @@ import {
     Bug,
     Scan,
   } from "lucide-react";
+  import AppNavbar from "@/components/dashboard/AppNavbar";
 
 export default function DashboardPage() {
     const [history, setHistory] = useState<ScanResult[]>([]);
@@ -44,7 +45,9 @@ const topThreat =
     (a, b) => b[1] - a[1]
   )[0]?.[0] || "None";
     return (
-    <main className="container mx-auto py-24">
+      <>
+      <AppNavbar />
+          <main className="container mx-auto pt-32 pb-24">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-5xl font-bold text-center mb-4">
           Security Dashboard
@@ -122,5 +125,6 @@ const topThreat =
 </div>
       </div>
     </main>
+    </>
   );
 }
