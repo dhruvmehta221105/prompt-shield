@@ -4,19 +4,14 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { GradientButton } from "@/components/ui/gradient-button";
-import BackgroundEffects from "@/components/background/BackgroundEffects";
 import { ASSETS, SITE } from "@/lib/constants";
 
 export function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-screen overflow-hidden bg-[#090909] pt-28 lg:pt-32"
+      className="relative min-h-screen overflow-hidden pt-28 lg:pt-32"
     >
-      {/* Background */}
-      <BackgroundEffects />
-
-      {/* Content */}
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-6 pb-20 lg:grid-cols-2 lg:gap-8 lg:px-[98px] lg:pb-32">
         {/* Left Side */}
         <motion.div
@@ -54,16 +49,13 @@ export function Hero() {
           }}
           className="relative mx-auto flex w-full max-w-lg items-center justify-center lg:max-w-none"
         >
-          {/* Extra glow behind shield */}
-          <div className="absolute h-[420px] w-[420px] rounded-full bg-cyan-400/20 blur-[140px]" />
-
           <Image
             src={ASSETS.heroShield}
             alt="AI Security Shield"
             width={530}
             height={530}
             priority
-            className="relative z-10 w-full max-w-[530px] object-contain drop-shadow-[0_0_50px_rgba(62,213,221,0.45)]"
+            className="relative z-10 w-full max-w-[530px] object-contain"
           />
         </motion.div>
       </div>
