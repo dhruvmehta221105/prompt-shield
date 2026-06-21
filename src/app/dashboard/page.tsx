@@ -10,7 +10,11 @@ import {
     Bug,
     Scan,
   } from "lucide-react";
-  import AppNavbar from "@/components/dashboard/AppNavbar";
+import AppNavbar from "@/components/dashboard/AppNavbar";
+import RiskChart from "@/components/dashboard/RiskChart";
+import RecentActivity from "@/components/dashboard/RecentActivity";
+import ThreatBreakdown from "@/components/dashboard/ThreatBreakdown";
+import RecentScansTable from "@/components/dashboard/RecentScansTable";
 
 export default function DashboardPage() {
     const [history, setHistory] = useState<ScanResult[]>([]);
@@ -123,6 +127,18 @@ const topThreat =
     </p>
   </GlassCard>
 </div>
+
+        {/* Charts & Activity Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+          <RiskChart history={history} />
+          <RecentActivity history={history} />
+        </div>
+
+        {/* Threat Breakdown Component */}
+        <ThreatBreakdown threatCounts={threatCounts} totalScans={totalScans} />
+
+        {/* Recent Scans Table Component */}
+        <RecentScansTable history={history} />
       </div>
     </main>
     </>
