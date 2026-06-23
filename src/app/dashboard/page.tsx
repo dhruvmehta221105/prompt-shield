@@ -37,6 +37,37 @@ export default function DashboardPage() {
         scan => scan.score >= 50
       ).length;
       const threatCounts: Record<string, number> = {};
+      const getInsights = () => {
+  const insights: string[] = [];
+
+  if (averageRisk >= 50) {
+    insights.push(
+      "Average prompt risk is high. Review prompts before sending."
+    );
+  } else {
+    insights.push(
+      "Most analyzed prompts fall within an acceptable risk range."
+    );
+  }
+
+  if (topThreat !== "None") {
+    insights.push(
+      `${topThreat} is the most frequently detected threat.`
+    );
+  }
+
+  if (highRiskScans === 0) {
+    insights.push(
+      "No High or Critical risk prompts have been detected."
+    );
+  }
+
+  insights.push(
+    `${totalScans} prompts have been analyzed so far.`
+  );
+
+  return insights;
+};
 
 history.forEach((scan) => {
   scan.threats.forEach((threat) => {
@@ -136,6 +167,24 @@ const topThreat =
 
         {/* Threat Breakdown Component */}
         <ThreatBreakdown threatCounts={threatCounts} totalScans={totalScans} />
+
+        <GlassCard className="p-6 mt-6">
+  <h2 className="text-xl font-bold mb-4">
+    Security Insights
+  </h2>
+
+  <ul className="space-y-3">
+    {getInsights().map((item, index) => (
+      <li
+        key={index}
+        className="flex items-start gap-3"
+      >
+        <span>•</span>
+        <span>{item}</span>
+      </li>
+    ))}
+  </ul>
+</GlassCard>
 
         {/* Recent Scans Table Component */}
         <RecentScansTable history={history} />
