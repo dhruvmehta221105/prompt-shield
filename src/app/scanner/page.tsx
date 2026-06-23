@@ -28,7 +28,57 @@ export default function ScannerPage() {
     if (score >= 50) return "Review before sending.";
     if (score >= 25) return "Proceed with caution.";
     return "Prompt appears safe.";
+    
   };
+  const getActions = (score: number, threats: string[]) => {
+  const actions: string[] = [];
+
+  if (score >= 75)
+    actions.push("Block this prompt before sending to the AI model.");
+
+  if (score >= 50)
+    actions.push("Review the prompt manually before submission.");
+
+  if (threats.includes("Prompt Injection"))
+    actions.push("Remove instructions that attempt to override the model.");
+
+  if (threats.includes("Jailbreak"))
+    actions.push("Avoid prompts designed to bypass AI safety measures.");
+
+  if (threats.includes("System Prompt Extraction"))
+    actions.push("Never request hidden system prompts or confidential instructions.");
+
+  if (actions.length === 0)
+    actions.push("No security actions required.");
+
+  return actions;
+};
+  const getStatus = (score: number) => {
+  if (score >= 75) return "Blocked";
+  if (score >= 50) return "Needs Review";
+  if (score >= 25) return "Caution";
+  return "Safe";
+};
+
+  const threatDescriptions: Record<string, string> = {
+  "Prompt Injection":
+    "Attempts to override the model's original instructions or manipulate its behavior.",
+
+  "Jailbreak":
+    "Contains instructions designed to bypass AI safety restrictions.",
+
+  "System Prompt Extraction":
+    "Attempts to reveal hidden system prompts or confidential instructions.",
+
+  "Prompt Leakage":
+    "Attempts to expose internal prompts or implementation details.",
+
+  "Data Exfiltration":
+    "Tries to retrieve sensitive or confidential information from the model.",
+
+  "Role Override":
+    "Attempts to change the assistant's assigned role or identity.",
+};
 
   const severity = getSeverity(score);
 
@@ -119,50 +169,129 @@ export default function ScannerPage() {
 
         {hasScanned && (
           <GlassCard className="mt-8 p-6">
-            <h2 className="text-2xl font-bold">
-              Risk Score: {score}/100
-            </h2>
+           <h2 className="text-2xl font-bold">
+  Security Analysis Report
+</h2>
 
-            <p className="mt-2 text-sm text-muted-foreground">
-              Threat Count: {threats.length}
-            </p>
+<p className="text-sm text-muted-foreground mt-1">
+  Complete security assessment of the submitted prompt.
+</p>
+<div className="mt-6">
+  <div className="flex justify-between items-center mb-2">
+    <span className="font-medium">Overall Risk</span>
+    <span className="font-semibold">{score}/100</span>
+  </div>
 
-            <div className="mt-4 flex items-center gap-3">
-              <span className="font-semibold">
-                Severity:
-              </span>
+  <div className="w-full h-3 bg-neutral-800 rounded-full overflow-hidden">
+    <div
+      className={`h-full transition-all duration-500 ${
+        score >= 75
+          ? "bg-red-500"
+          : score >= 50
+          ? "bg-orange-500"
+          : score >= 25
+          ? "bg-yellow-500"
+          : "bg-green-500"
+      }`}
+      style={{ width: `${score}%` }}
+    />
+  </div>
+</div>
 
-              <SeverityBadge severity={severity} />
-            </div>
+            <div className="grid grid-cols-2 gap-4 mt-6">
 
-            <div className="mt-6">
-              <h3 className="font-semibold mb-2">
-                Threats Detected
-              </h3>
+  <div className="rounded-lg border p-4">
+    <p className="text-sm text-muted-foreground">
+      Severity
+    </p>
 
-              {threats.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {threats.map((threat) => (
-                    <ThreatBadge
-                      key={threat}
-                      threat={threat}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-muted-foreground">
-                  No threats detected.
-                </p>
-              )}
-            </div>
+    <div className="mt-2">
+      <SeverityBadge severity={severity} />
+    </div>
+  </div>
 
-            <div className="mt-6">
-              <h3 className="font-semibold mb-2">
-                Recommendation
-              </h3>
+  <div className="rounded-lg border p-4">
+    <p className="text-sm text-muted-foreground">
+      Status
+    </p>
 
-              <p>{getRecommendation(score)}</p>
-            </div>
+    <p className="mt-2 font-semibold">
+      {getStatus(score)}
+    </p>
+  </div>
+
+  <div className="rounded-lg border p-4">
+    <p className="text-sm text-muted-foreground">
+      Threats Found
+    </p>
+
+    <p className="mt-2 text-2xl font-bold">
+      {threats.length}
+    </p>
+  </div>
+
+  <div className="rounded-lg border p-4">
+    <p className="text-sm text-muted-foreground">
+      Risk Score
+    </p>
+
+    <p className="mt-2 text-2xl font-bold">
+      {score}/100
+    </p>
+  </div>
+
+</div>
+
+           <div className="mt-8">
+  <h3 className="text-lg font-semibold mb-4">
+    Threat Analysis
+  </h3>
+
+  {threats.length === 0 ? (
+    <p className="text-muted-foreground">
+      No threats detected.
+    </p>
+  ) : (
+    <div className="space-y-4">
+      {threats.map((threat) => (
+        <div
+          key={threat}
+          className="rounded-xl border p-4"
+        >
+          <div className="flex items-center justify-between">
+            <ThreatBadge threat={threat} />
+          </div>
+
+          <p className="mt-3 text-sm text-muted-foreground">
+            {threatDescriptions[threat] ??
+              "Potential security threat detected."}
+          </p>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+            <div className="mt-8">
+  <h3 className="text-lg font-semibold mb-4">
+    Recommended Actions
+  </h3>
+
+  <ul className="space-y-3">
+    {getActions(score, threats).map((action, index) => (
+      <li
+        key={index}
+        className="flex items-start gap-3 rounded-lg border p-3"
+      >
+        <span className="text-green-500 font-bold">✓</span>
+
+        <span className="text-sm">
+          {action}
+        </span>
+      </li>
+    ))}
+  </ul>
+</div>
           </GlassCard>
         )}
 
