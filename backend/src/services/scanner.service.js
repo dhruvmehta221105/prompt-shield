@@ -1,3 +1,5 @@
+const threatRules = require("../data/threatRules");
+
 const analyzePrompt = (prompt) => {
   const text = prompt.toLowerCase();
 
@@ -5,28 +7,23 @@ const analyzePrompt = (prompt) => {
   let riskScore = 0;
 
   // -------------------------------
-  // Prompt Injection Detection
+  // Detect Threats
   // -------------------------------
-  if (
-    text.includes("ignore previous instructions") ||
-    text.includes("ignore all previous instructions")
-  ) {
-    threats.push("Prompt Injection");
-    riskScore += 40;
+  for (const rule of threatRules) {
+    const matched = rule.keywords.some((keyword) =>
+      text.includes(keyword)
+    );
+
+    if (matched) {
+      threats.push(rule.name);
+      riskScore += rule.score;
+    }
   }
 
   // -------------------------------
-  // System Prompt Extraction Detection
+  // Cap Risk Score
   // -------------------------------
-  if (
-    text.includes("system prompt") ||
-    text.includes("hidden instructions") ||
-    text.includes("internal instructions") ||
-    text.includes("reveal your prompt")
-  ) {
-    threats.push("System Prompt Extraction");
-    riskScore += 35;
-  }
+  riskScore = Math.min(riskScore, 100);
 
   // -------------------------------
   // Calculate Severity
