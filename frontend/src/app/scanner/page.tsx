@@ -308,10 +308,9 @@ const handleAnalyze = async () => {
   </h2>
 
   <button
-    onClick={() => {
-      localStorage.removeItem("scan-history");
-      setHistory([]);
-    }}
+   onClick={() => {
+  alert("Clear history will be added in a future update.");
+}}
     className="text-sm text-red-400"
   >
     Clear
