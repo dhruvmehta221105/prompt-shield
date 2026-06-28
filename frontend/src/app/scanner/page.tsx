@@ -2,17 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { GlassCard } from "@/components/ui/glass-card";
-import { analyzePrompt } from "@/lib/threatEngine";
-import { calculateRisk } from "@/lib/riskCalculator";
+import { analyzePrompt as analyzePromptAPI } from "@/lib/api";
 import SeverityBadge from "@/components/scanner/SeverityBadge";
 import ThreatBadge from "@/components/scanner/ThreatBadge";
-import type { ScanResult } from "@/types/scan";
+import type { ScanResult , Threat} from "@/types/scan";
 import AppNavbar from "@/components/dashboard/AppNavbar";
 
 export default function ScannerPage() {
   const [prompt, setPrompt] = useState("");
   const [score, setScore] = useState(0);
-  const [threats, setThreats] = useState<string[]>([]);
+ const [threats, setThreats] = useState<Threat[]>([]);
   const [hasScanned, setHasScanned] = useState(false);
   const [history, setHistory] = useState<ScanResult[]>([]);
 
@@ -30,7 +29,7 @@ export default function ScannerPage() {
     return "Prompt appears safe.";
     
   };
-  const getActions = (score: number, threats: string[]) => {
+  const getActions = (score: number, threats: Threat[]) => {
   const actions: string[] = [];
 
   if (score >= 75)
@@ -39,13 +38,13 @@ export default function ScannerPage() {
   if (score >= 50)
     actions.push("Review the prompt manually before submission.");
 
-  if (threats.includes("Prompt Injection"))
+  if (threats.some((t) => t.name === "Prompt Injection"))
     actions.push("Remove instructions that attempt to override the model.");
 
-  if (threats.includes("Jailbreak"))
+  if (threats.some((t) => t.name === "Jailbreak Attempt"))
     actions.push("Avoid prompts designed to bypass AI safety measures.");
 
-  if (threats.includes("System Prompt Extraction"))
+  if (threats.some((t) => t.name === "System Prompt Extraction"))
     actions.push("Never request hidden system prompts or confidential instructions.");
 
   if (actions.length === 0)
@@ -60,25 +59,6 @@ export default function ScannerPage() {
   return "Safe";
 };
 
-  const threatDescriptions: Record<string, string> = {
-  "Prompt Injection":
-    "Attempts to override the model's original instructions or manipulate its behavior.",
-
-  "Jailbreak":
-    "Contains instructions designed to bypass AI safety restrictions.",
-
-  "System Prompt Extraction":
-    "Attempts to reveal hidden system prompts or confidential instructions.",
-
-  "Prompt Leakage":
-    "Attempts to expose internal prompts or implementation details.",
-
-  "Data Exfiltration":
-    "Tries to retrieve sensitive or confidential information from the model.",
-
-  "Role Override":
-    "Attempts to change the assistant's assigned role or identity.",
-};
 
   const severity = getSeverity(score);
 
@@ -90,19 +70,21 @@ export default function ScannerPage() {
     setHistory(stored);
   }, []);
 
-  const handleAnalyze = () => {
-    const detected = analyzePrompt(prompt);
-    const risk = calculateRisk(detected);
+const handleAnalyze = async () => {
+  try {
+    const response = await analyzePromptAPI(prompt);
+    const data = response.data;
 
-    setThreats(detected);
-    setScore(risk);
+    setThreats(data.threats);
+    setScore(data.riskScore);
     setHasScanned(true);
 
     const scan: ScanResult = {
       prompt,
-      score: risk,
-      severity: getSeverity(risk),
-      threats: detected,
+      riskScore: data.riskScore,
+      severity: data.severity,
+      recommendation: data.recommendation,
+      threats: data.threats,
       timestamp: new Date().toISOString(),
     };
 
@@ -118,7 +100,12 @@ export default function ScannerPage() {
     );
 
     setHistory(updated);
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Failed to analyze prompt.");
+  }
+};
+   
 
   return (
     <>
@@ -253,21 +240,32 @@ export default function ScannerPage() {
     </p>
   ) : (
     <div className="space-y-4">
-      {threats.map((threat) => (
-        <div
-          key={threat}
-          className="rounded-xl border p-4"
-        >
-          <div className="flex items-center justify-between">
-            <ThreatBadge threat={threat} />
-          </div>
+     {threats.map((threat) => (
+  <div
+    key={threat.name}
+    className="rounded-xl border p-4"
+  >
+    <div className="flex items-center justify-between">
+      <ThreatBadge threat={threat} />
+    </div>
 
-          <p className="mt-3 text-sm text-muted-foreground">
-            {threatDescriptions[threat] ??
-              "Potential security threat detected."}
-          </p>
-        </div>
-      ))}
+    <div className="mt-3 space-y-2">
+      <p className="text-sm">
+        <span className="font-semibold">Category:</span>{" "}
+        {threat.category}
+      </p>
+
+      <p className="text-sm">
+        <span className="font-semibold">Risk Score:</span>{" "}
+        {threat.score}
+      </p>
+
+      <p className="text-sm text-muted-foreground">
+        {threat.description}
+      </p>
+    </div>
+  </div>
+))}
     </div>
   )}
 </div>
@@ -324,11 +322,11 @@ export default function ScannerPage() {
       className="border-b py-3 last:border-0"
     >
       <p className="font-medium">
-        {scan.severity} • {scan.score}/100
+        {scan.severity} • {scan.riskScore}/100
       </p>
 
       <p className="text-sm text-muted-foreground">
-        {scan.threats.join(", ")}
+       {scan.threats.map((t) => t.name).join(", ")}
       </p>
 
       <p className="text-xs text-muted-foreground mt-1">

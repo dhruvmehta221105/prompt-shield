@@ -15,7 +15,12 @@ const analyzePrompt = (prompt) => {
     );
 
     if (matched) {
-      threats.push(rule.name);
+       threats.push({
+    name: rule.name,
+    category: rule.category || "General",
+    description: rule.description || "",
+    score: rule.score,
+  });
       riskScore += rule.score;
     }
   }
