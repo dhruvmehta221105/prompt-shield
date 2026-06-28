@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { GlassCard } from "@/components/ui/glass-card";
-import { analyzePrompt as analyzePromptAPI } from "@/lib/api";
+import {
+  analyzePrompt as analyzePromptAPI,
+  getScanHistory,
+} from "@/lib/api";
 import SeverityBadge from "@/components/scanner/SeverityBadge";
 import ThreatBadge from "@/components/scanner/ThreatBadge";
 import type { ScanResult , Threat} from "@/types/scan";
@@ -62,13 +65,18 @@ export default function ScannerPage() {
 
   const severity = getSeverity(score);
 
-  useEffect(() => {
-    const stored = JSON.parse(
-      localStorage.getItem("scan-history") || "[]"
-    );
+  const loadHistory = async () => {
+  try {
+    const response = await getScanHistory();
+    setHistory(response.data);
+  } catch (error) {
+    console.error("Failed to load history:", error);
+  }
+};
 
-    setHistory(stored);
-  }, []);
+  useEffect(() => {
+  loadHistory();
+}, []);
 
 const handleAnalyze = async () => {
   try {
@@ -326,11 +334,15 @@ const handleAnalyze = async () => {
       </p>
 
       <p className="text-sm text-muted-foreground">
-       {scan.threats.map((t) => t.name).join(", ")}
+      {scan.threats
+  .map((t: any) => (typeof t === "string" ? t : t.name))
+  .join(", ")}
       </p>
 
       <p className="text-xs text-muted-foreground mt-1">
-        {new Date(scan.timestamp).toLocaleString()}
+        {new Date(
+  (scan as any).createdAt || scan.timestamp
+).toLocaleString()}
       </p>
     </div>
   ))

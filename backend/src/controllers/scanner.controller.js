@@ -3,11 +3,13 @@ const {
   analyzePrompt: analyzePromptService,
 } = require("../services/scanner.service");
 
+// -----------------------------
+// Analyze Prompt
+// -----------------------------
 const analyzePrompt = async (req, res) => {
   try {
     const { prompt } = req.body;
 
-    // Validate input
     if (!prompt || prompt.trim() === "") {
       return res.status(400).json({
         success: false,
@@ -15,10 +17,8 @@ const analyzePrompt = async (req, res) => {
       });
     }
 
-    // Analyze prompt using service
     const analysis = analyzePromptService(prompt);
 
-    // Save to MongoDB
     const scan = await Scan.create({
       prompt,
       threats: analysis.threats,
@@ -27,7 +27,6 @@ const analyzePrompt = async (req, res) => {
       recommendation: analysis.recommendation,
     });
 
-    // Send response
     res.status(201).json({
       success: true,
       message: "Prompt analyzed successfully",
@@ -44,6 +43,30 @@ const analyzePrompt = async (req, res) => {
   }
 };
 
+// -----------------------------
+// Get Scan History
+// -----------------------------
+const getScanHistory = async (req, res) => {
+  try {
+    const scans = await Scan.find().sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: scans.length,
+      data: scans,
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch scan history",
+    });
+  }
+};
+
 module.exports = {
   analyzePrompt,
+  getScanHistory,
 };
