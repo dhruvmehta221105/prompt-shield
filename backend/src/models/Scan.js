@@ -9,10 +9,28 @@ const scanSchema = new mongoose.Schema(
     },
 
     threats: [
-      {
-        type: String,
-      },
-    ],
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+
+    category: {
+      type: String,
+      required: true,
+    },
+
+    description: {
+      type: String,
+      required: true,
+    },
+
+    score: {
+      type: Number,
+      required: true,
+    },
+  },
+],
 
     riskScore: {
       type: Number,
