@@ -12,16 +12,27 @@ export async function analyzePrompt(prompt: string) {
   if (!response.ok) {
     throw new Error("Failed to analyze prompt");
   }
-  
 
   return response.json();
 }
 
 export async function getScanHistory() {
-  const response = await fetch("http://localhost:5000/api/scan/history");
+  const response = await fetch(`${API_URL}/scan/history`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch scan history");
+  }
+
+  return response.json();
+}
+
+export async function deleteScanHistory() {
+  const response = await fetch(`${API_URL}/scan/history`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete scan history");
   }
 
   return response.json();
