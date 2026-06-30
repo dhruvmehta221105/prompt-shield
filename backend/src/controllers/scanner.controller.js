@@ -66,7 +66,27 @@ const getScanHistory = async (req, res) => {
   }
 };
 
+// Delete Scan History
+const deleteScanHistory = async (req, res) => {
+  try {
+    await Scan.deleteMany({});
+
+    res.status(200).json({
+      success: true,
+      message: "Scan history deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete scan history",
+    });
+  }
+};
+
 module.exports = {
   analyzePrompt,
   getScanHistory,
+  deleteScanHistory,
 };

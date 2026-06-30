@@ -5,6 +5,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 import {
   analyzePrompt as analyzePromptAPI,
   getScanHistory,
+  deleteScanHistory,
 } from "@/lib/api";
 import SeverityBadge from "@/components/scanner/SeverityBadge";
 import ThreatBadge from "@/components/scanner/ThreatBadge";
@@ -74,6 +75,8 @@ export default function ScannerPage() {
   }
 };
 
+
+
   useEffect(() => {
   loadHistory();
 }, []);
@@ -87,30 +90,25 @@ const handleAnalyze = async () => {
     setScore(data.riskScore);
     setHasScanned(true);
 
-    const scan: ScanResult = {
-      prompt,
-      riskScore: data.riskScore,
-      severity: data.severity,
-      recommendation: data.recommendation,
-      threats: data.threats,
-      timestamp: new Date().toISOString(),
-    };
-
-    const existing: ScanResult[] = JSON.parse(
-      localStorage.getItem("scan-history") || "[]"
-    );
-
-    const updated = [scan, ...existing];
-
-    localStorage.setItem(
-      "scan-history",
-      JSON.stringify(updated)
-    );
-
-    setHistory(updated);
+   await loadHistory();
   } catch (error) {
     console.error(error);
     alert("Failed to analyze prompt.");
+  }
+};
+const handleClearHistory = async () => {
+  const confirmed = window.confirm(
+    "Are you sure you want to delete all scan history?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await deleteScanHistory();
+    setHistory([]);
+  } catch (error) {
+    console.error(error);
+    alert("Failed to delete history.");
   }
 };
    
@@ -308,13 +306,11 @@ const handleAnalyze = async () => {
   </h2>
 
   <button
-   onClick={() => {
-  alert("Clear history will be added in a future update.");
-}}
-    className="text-sm text-red-400"
-  >
-    Clear
-  </button>
+  onClick={handleClearHistory}
+  className="text-sm text-red-400"
+>
+  Clear
+</button>
 </div>
 
 
