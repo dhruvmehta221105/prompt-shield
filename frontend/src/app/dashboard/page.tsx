@@ -3,6 +3,10 @@
 import { GlassCard } from "@/components/ui/glass-card";
 import { useEffect, useState } from "react";
 import type { ScanResult } from "@/types/scan";
+import{
+  getDashboardStats,
+  getScanHistory,
+}from "@/lib/api";
 import {
     ScanSearch,
     ShieldAlert,
@@ -18,29 +22,52 @@ import RecentScansTable from "@/components/dashboard/RecentScansTable";
 
 export default function DashboardPage() {
     const [history, setHistory] = useState<ScanResult[]>([]);
+    const [stats, setStats] = useState({
+  totalScans: 0,
+  critical: 0,
+  high: 0,
+  medium: 0,
+  low: 0,
+  averageRisk: 0,
+});
 
-    useEffect(() => {
-        const stored = JSON.parse(
-          localStorage.getItem("scan-history") || "[]"
-        );
-      
-        setHistory(stored);
-      }, []);
+const loadDashboardStats = async () => {
+  try {
+    const response = await getDashboardStats();
+    setStats(response.data);
+  } catch (error) {
+    console.error("Failed to load dashboard stats:", error);
+  }
+};
+
+ const loadHistory = async () => {
+  try {
+    const response = await getScanHistory();
+    setHistory(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+useEffect(() => {
+  loadDashboardStats();
+  loadHistory();
+}, []);
       const totalScans = history.length; 
       const averageRisk =
   totalScans > 0
     ? Math.round(
-        history.reduce((sum, scan) => sum + scan.score, 0) / totalScans
+        history.reduce((sum, scan) => sum + scan.riskScore, 0) / totalScans
       )
     : 0;   
     const highRiskScans = history.filter(
-        scan => scan.score >= 50
+        scan => scan.riskScore >= 50
       ).length;
       const threatCounts: Record<string, number> = {};
       const getInsights = () => {
   const insights: string[] = [];
 
-  if (averageRisk >= 50) {
+  if (stats.averageRisk >= 50) {
     insights.push(
       "Average prompt risk is high. Review prompts before sending."
     );
@@ -56,7 +83,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (highRiskScans === 0) {
+  if (stats.high + stats.critical === 0) {
     insights.push(
       "No High or Critical risk prompts have been detected."
     );
@@ -71,10 +98,15 @@ export default function DashboardPage() {
 
 history.forEach((scan) => {
   scan.threats.forEach((threat) => {
-    threatCounts[threat] = (threatCounts[threat] || 0) + 1;
+    const threatName =
+      typeof threat === "string"
+        ? threat
+        : threat.name;
+
+    threatCounts[threatName] =
+      (threatCounts[threatName] || 0) + 1;
   });
 });
-
 const topThreat =
   Object.entries(threatCounts).sort(
     (a, b) => b[1] - a[1]
@@ -102,7 +134,7 @@ const topThreat =
     </div>
 
     <p className="mt-6 text-4xl font-bold">
-      {totalScans}
+      {stats.totalScans}
     </p>
 
     <p className="mt-2 text-sm text-muted-foreground">
@@ -118,7 +150,7 @@ const topThreat =
     </div>
 
     <p className="mt-6 text-4xl font-bold">
-      {averageRisk}/100
+      {stats.averageRisk}/100
     </p>
 
     <p className="mt-2 text-sm text-muted-foreground">
@@ -134,7 +166,7 @@ const topThreat =
     </div>
 
     <p className="mt-6 text-4xl font-bold">
-      {highRiskScans}
+      {stats.high+stats.critical}
     </p>
 
     <p className="mt-2 text-sm text-muted-foreground">
@@ -166,7 +198,7 @@ const topThreat =
         </div>
 
         {/* Threat Breakdown Component */}
-        <ThreatBreakdown threatCounts={threatCounts} totalScans={totalScans} />
+        <ThreatBreakdown threatCounts={threatCounts} totalScans={stats.totalScans} />
 
         <GlassCard className="p-6 mt-6">
   <h2 className="text-xl font-bold mb-4">
