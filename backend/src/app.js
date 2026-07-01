@@ -3,6 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 
+const authRoutes = require("./routes/auth.routes");
 const scanRoutes = require("./routes/scanner.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 
@@ -15,6 +16,7 @@ app.use(morgan("dev"));
 
 app.use("/api/scan", scanRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.json({
