@@ -1,34 +1,25 @@
 const mongoose = require("mongoose");
 
-const scanSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
-    prompt: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
 
-    threats: [
-      {
-        type: String,
-      },
-    ],
-
-    riskScore: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 100,
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
 
-    severity: {
+    password: {
       type: String,
-      enum: ["Low", "Medium", "High", "Critical"],
-      default: "Low",
-    },
-    recommendation: {
-      type: String,
-      default: "",
+      required: true,
+      minlength: 6,
     },
   },
   {
@@ -36,4 +27,4 @@ const scanSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("Scan", scanSchema);
+module.exports = mongoose.model("User", userSchema);
